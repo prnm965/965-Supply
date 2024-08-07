@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Program Barang</title>
+  <style>
+    table {
+      border-collapse: collapse;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+  </style>
+</head>
+<body>
+  <h1>Program Barang</h1>
+  <form id="form-barang">
+   No Order : <input type="text" id="no-order" placeholder="No Order" required><br><br>
+   Kode Barang : <input type="text" id="kode-barang" placeholder="Kode Barang" required><br><br>
+   Tulisan Dinding :<input type="text" id="nama-barang" readonly><br><br>
+   Harga Satuan : <input type="text" id="harga" readonly><br><br>
+   Jumlah : <input type="number" id="jumlah" placeholder="Jumlah" required><br><br>
+    <button id="simpan">Simpan</button>
+    <button id="tampilkan">Tampilkan</button>
+  </form>
+
+  <div id="output"></div>
+
+  <script>
+    var form = document.getElementById('form-barang');
+    var kodeBarangInput = document.getElementById('kode-barang');
+    var namaBarangInput = document.getElementById('nama-barang');
+    var hargaInput = document.getElementById('harga');
+    var jumlahInput = document.getElementById('jumlah');
+    var simpanButton = document.getElementById('simpan');
+    var tampilkanButton = document.getElementById('tampilkan');
+    var outputDiv = document.getElementById('output');
+
+    let dataBarang = [];
+
+    kodeBarangInput.addEventListener('keyup', (e) => {
+      if (e.key === 'Enter') {
+        const kodeBarang = kodeBarangInput.value;
+        switch (kodeBarang) {
+          case 'H001':
+            namaBarangInput.value = 'Berkata Baik atau Diam';
+            hargaInput.value = 'Rp. 100000';
+            break;
+          case 'H002':
+            namaBarangInput.value = 'Kita Sering Lupa Ada Malaikat Bersama Kita Yang Dengan Teliti Mencatat Setiap Amalan Kita';
+            hargaInput.value = 'Rp. 200000';
+            break;
+          case 'H003':
+            namaBarangInput.value = 'Hidup Ini Hanya Sementara';
+            hargaInput.value = 'Rp. 200000';
+            break;
+          default:
+            namaBarangInput.value = '';
+            hargaInput.value = '';
+        }
+      }
+    });
+
+    simpanButton.addEventListener('click', (e) => {
+      e.preventDefault();
+      const noOrder = document.getElementById('no-order').value;
+      const kodeBarang = kodeBarangInput.value;
+      const namaBarang = namaBarangInput.value;
+      const harga = hargaInput.value;
+      const jumlah = jumlahInput.value;
+      dataBarang.push({ noOrder, kodeBarang, namaBarang, harga, jumlah });
+    });
+
+    tampilkanButton.addEventListener('click', (e) => {
+      e.preventDefault();
+      let subtotal = 0;
+      const tableHtml = `
+        <table>
+          <tr>
+            <th>No Order</th>
+            <th>Kode Barang</th>
+            <th>Nama Barang</th>
+            <th>Harga</th>
+            <th>Jumlah</th>
+            <th>Sub Total</th>
+          </tr>
+          ${dataBarang.map((barang) => {
+            const hargaInt = parseInt(barang.harga.replace('Rp. ', ''));
+            const jumlahInt = parseInt(barang.jumlah);
+            const subtotalItem = hargaInt * jumlahInt;
+            subtotal += subtotalItem;
+            return `
+              <tr>
+                <td>${barang.noOrder}</td>
+                <td>${barang.kodeBarang}</td>
+                <td>${barang.namaBarang}</td>
+                <td>${barang.harga}</td>
+                <td>${barang.jumlah}</td>
+                <td>Rp. ${subtotalItem.toLocaleString()}</td>
+              </tr>
+            `;
+          }).join('')}
+          <tr>
+            <th colspan="5">Total Subtotal</th>
+            <th>Rp. ${subtotal.toLocaleString()}</th>
+          </tr>
+        </table>
+      `;
+      outputDiv.innerHTML = tableHtml;
+    });
+  </script>
+</body>
+</html>

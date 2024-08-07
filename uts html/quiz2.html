@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Program Barang</title>
+  <style>
+    table {
+      border-collapse: collapse;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+  </style>
+</head>
+<body>
+  <h1>Program Barang</h1>
+  <form id="form-barang">
+    <input type="text" id="no-order" placeholder="No Order"><br><br>
+    <input type="text" id="kode-barang" placeholder="Kode Barang"><br><br>
+    <input type="text" id="nama-barang" readonly><br><br>
+    <input type="text" id="harga" readonly><br><br>
+    <input type="number" id="jumlah" placeholder="Jumlah"><br><br>
+    <button onclick="simpan()">Simpan</button>
+    <button onclick="tampilkan()">Tampilkan</button>
+  </form>
+
+  <div id="output"></div>
+
+  <script>
+    let dataBarang = [];
+    let noOrder = '';
+
+    document.getElementById('no-order').addEventListener('blur', (e) => {
+      noOrder = e.target.value;
+    });
+
+    document.getElementById('kode-barang').addEventListener('keyup', (e) => {
+      if (e.key === 'Enter') {
+        const kodeBarang = e.target.value;
+        switch (kodeBarang) {
+          case 'H001':
+            document.getElementById('nama-barang').value = 'Berkata Baik atau Diam';
+            document.getElementById('harga').value = 'Rp. 100000';
+            break;
+          case 'H002':
+            document.getElementById('nama-barang').value = 'Kita Sering Lupa Ada Malaikat Bersama Kita Yang Dengan Teliti Mencatat Setiap Amalan Kita';
+            document.getElementById('harga').value = 'Rp. 200000';
+            break;
+          case 'H003':
+            document.getElementById('nama-barang').value = 'Hidup Ini Hanya Sementara';
+            document.getElementById('harga').value = 'Rp. 200000';
+            break;
+          default:
+            document.getElementById('nama-barang').value = '';
+            document.getElementById('harga').value = '';
+        }
+      }
+    });
+
+    function simpan() {
+      const kodeBarang = document.getElementById('kode-barang').value;
+      const namaBarang = document.getElementById('nama-barang').value;
+      const harga = document.getElementById('harga').value;
+      const jumlah = document.getElementById('jumlah').value;
+      dataBarang.push({ noOrder, kodeBarang, namaBarang, harga, jumlah });
+    }
+
+    function tampilkan() {
+      const output = document.getElementById('output');
+      output.innerHTML = '';
+      let subtotal = 0;
+      output.innerHTML += `
+        <table>
+          <tr>
+            <th>No Order</th>
+            <th>Kode Barang</th>
+            <th>Nama Barang</th>
+            <th>Harga</th>
+            <th>Jumlah</th>
+            <th>Subtotal</th>
+          </tr>
+      `;
+      for (let i = 0; i < dataBarang.length; i++) {
+        const hargaInt = parseInt(dataBarang[i].harga.replace('Rp. ', ''));
+        const jumlahInt = parseInt(dataBarang[i].jumlah);
+        const subtotalItem = hargaInt * jumlahInt;
+        subtotal += subtotalItem;
+        output.innerHTML += `
+          <tr>
+            <td>${dataBarang[i].noOrder}</td>
+            <td>${dataBarang[i].kodeBarang}</td>
+            <td>${dataBarang[i].namaBarang}</td>
+            <td>${dataBarang[i].harga}</td>
+            <td>${dataBarang[i].jumlah}</td>
+            <td>Rp. ${subtotalItem.toLocaleString()}</td>
+          </tr>
+        `;
+      }
+      output.innerHTML += `
+        <tr>
+          <th colspan="5">Subtotal</th>
+          <th>Rp. ${subtotal.toLocaleString()}</th>
+        </tr>
+      `;
+      output.innerHTML += `
+        </table>
+      `;
+    }
+  </script>
+</body>
+</html>
